@@ -90,7 +90,7 @@ def verifyFace(img1,img2_representation,vgg_face_descriptor):
   
   cosine_similarity = findCosineDistance(img1_representation, img2_representation)
  
-  if(cosine_similarity < 0.5):
+  if(cosine_similarity < 0.45):
     return 1
   else:
     return -1
@@ -107,8 +107,11 @@ def extract_face(mtcnn_model,img):
 
 def main():
     args = parse_args()
+    #MTCNN model for face detection
     detector = MTCNN()
+    # VGG model for feature extraction
     comparator = face_comparaison_model()
+    # Saved image to compare with
     image_to_compare = cv2.imread(args.image_path)
     image_to_compare = extract_face(detector,image_to_compare)
     img2_representation = comparator.predict(preprocess_image(image_to_compare))[0,:]
@@ -127,13 +130,19 @@ def main():
                           (bounding_box[0]+bounding_box[2], bounding_box[1] + bounding_box[3]),
                           (0,155,255),
                           2)
-
-            detected_face = frame[bounding_box[1]: bounding_box[1]+bounding_box[3],bounding_box[0]: bounding_box[0]+ bounding_box[2]]
+            #Crop the detected face from the original image
+            detected_face = frame[bounding_box[1]: bounding_box[1]+bounding_box[3],
+            bounding_box[0]: bounding_box[0]+ bounding_box[2]]
+            #Face comparaison with the saved image
             res = verifyFace(detected_face,img2_representation,comparator)
+            # Draw results: Show name if the identity matched else show Not name
             text = args.name if res == 1 else "Not "+args.name
             (w, h), _ = cv2.getTextSize(text, cv2.FONT_HERSHEY_SIMPLEX, 0.6, 1)
-            cv2.rectangle(frame, (bounding_box[0]+10, bounding_box[1] - 15), (bounding_box[0] + w, bounding_box[1]), (0,155,255), -1)
-            cv2.putText(frame, text, (bounding_box[0], bounding_box[1]), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
+            # Draw rectangle on the face
+            cv2.rectangle(frame, (bounding_box[0], bounding_box[1] - 15), 
+            (bounding_box[0] + w, bounding_box[1]), (0,155,255), -1)
+            cv2.putText(frame, text, (bounding_box[0], bounding_box[1]),
+             cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255,255,255), 2)
 
         #display resulting frame
         cv2.imshow('frame',frame)
