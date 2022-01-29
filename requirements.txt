@@ -1,0 +1,7 @@
+numpy
+keras
+tensorflow-cpu
+matplotlib
+opencv-python
+mtcnn
+argparse
