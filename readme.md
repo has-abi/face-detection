@@ -5,7 +5,7 @@ pip install mtcnn
 ```
 ## Feature Extraction With VGG-FACE
 
-Download the pretrained model from google drive at [pretrained-wights](https://drive.google.com/file/d/1CPSeum3HpopfomUEK1gybeuIVoeJT_Eo/view?usp=sharing) and place it in models directory with the name vgg_face_weights.h5
+Download the pretrained model from [Google Drive](https://drive.google.com/file/d/1CPSeum3HpopfomUEK1gybeuIVoeJT_Eo/view?usp=sharing) and place it in models directory with the name vgg_face_weights.h5
 
 ## Testing
 
